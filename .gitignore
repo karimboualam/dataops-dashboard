@@ -1,0 +1,68 @@
+# =========================================
+# GLOBAL IGNORE FILE for DataOps Cloud Suite
+# Covers: Java (Spring Boot), Angular, Python
+# =========================================
+
+# ---- General ----
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.env
+.env.local
+.env.development.local
+.env.production.local
+
+# ---- Java / Spring Boot ----
+target/
+!.mvn/wrapper/maven-wrapper.jar
+*.class
+*.jar
+*.war
+*.ear
+
+# ---- Maven Wrapper ----
+.mvn/
+mvnw.cmd
+mvnw
+
+# ---- Node / Angular ----
+node_modules/
+dist/
+tmp/
+coverage/
+.npm/
+.cache/
+.angular/
+# Build artifacts
+*.js.map
+*.tsbuildinfo
+
+# ---- Python / FastAPI ----
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+.env/
+.venv/
+venv/
+ENV/
+env/
+# Uvicorn logs
+*.pid
+
+# ---- OS / System ----
+*.bak
+*.old
+*.orig
+*.rej
+*~
+
+# ---- CI/CD ----
+# Ignore local GitHub Actions cache
+.github/workflows/*.log

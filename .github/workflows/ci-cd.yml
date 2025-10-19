@@ -1,0 +1,24 @@
+name: CI/CD Render Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build backend
+        run: |
+          cd backend/dataops-backend
+          ./mvnw clean package -DskipTests
+
+      - name: Build frontend
+        run: |
+          cd frontend/dataops-frontend
+          npm install
+          npm run build --prod
