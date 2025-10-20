@@ -12,16 +12,19 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: backend
+        working-directory: backend   # <-- ✅ Dossier backend spécifié
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
+
       - name: Build Spring Boot
-        run: ./mvnw clean package -DskipTests
+        run: ./mvnw clean package -DskipTests   # <-- fonctionne maintenant, car dans /backend
+
       - name: Run tests
         run: ./mvnw test
 
