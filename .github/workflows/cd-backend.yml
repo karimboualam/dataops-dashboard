@@ -1,0 +1,19 @@
+name: CD - Deploy Backend (Spring Boot)
+
+on:
+  workflow_run:
+    workflows: ["CI - Build and Test"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render Deploy (Backend)
+        env:
+          RENDER_BACKEND_HOOK_URL: ${{ secrets.RENDER_BACKEND_HOOK }}
+        run: |
+          echo "🚀 Deploying Spring Boot backend to Render..."
+          curl -X POST "$RENDER_BACKEND_HOOK_URL"

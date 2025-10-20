@@ -1,0 +1,43 @@
+name: CI - Build and Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend-build:
+    name: 🧱 Build Backend (Java)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - name: Build Spring Boot
+        run: ./mvnw clean package -DskipTests
+      - name: Run tests
+        run: ./mvnw test
+
+  python-lint:
+    name: 🐍 Check FastAPI code
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: python-etl
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run basic syntax check
+        run: python -m py_compile app/main.py
