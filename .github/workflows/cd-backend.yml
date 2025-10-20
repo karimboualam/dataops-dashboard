@@ -3,17 +3,37 @@ name: CD - Deploy Backend (Spring Boot)
 on:
   workflow_run:
     workflows: ["CI - Build and Test"]
-    types:
-      - completed
+    types: [completed]
 
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    name: 🚀 Deploy Spring Boot Backend
+    # ✅ Ne déploie que si build réussi ET sur la branche main
+    if: github.ref == 'refs/heads/main' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
+
     steps:
-      - name: Trigger Render Deploy (Backend)
+      - name: 🧪 Check Render Secret
+        run: |
+          if [ -z "${{ secrets.RENDER_BACKEND_HOOK }}" ]; then
+            echo "❌ Secret RENDER_BACKEND_HOOK is missing!"
+            exit 1
+          else
+            echo "✅ Secret found. Proceeding with deployment..."
+          fi
+
+      - name: 🚀 Trigger Render Deploy (Backend)
         env:
           RENDER_BACKEND_HOOK_URL: ${{ secrets.RENDER_BACKEND_HOOK }}
         run: |
           echo "🚀 Deploying Spring Boot backend to Render..."
-          curl -X POST "$RENDER_BACKEND_HOOK_URL"
+          RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -X POST "$RENDER_BACKEND_HOOK_URL")
+
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "❌ Deployment failed with status code $RESPONSE"
+            echo "Response:"
+            cat response.txt
+            exit 1
+          else
+            echo "✅ Render deployment triggered successfully!"
+          fi
