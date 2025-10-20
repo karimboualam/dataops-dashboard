@@ -6,7 +6,7 @@ app = FastAPI()
 
 @app.get("/")
 def root():
-    return {"message": "Hello from FastAPI Data Worker!"}
+    return {"message": "Hello from FastAPI Data Worker!!"}
 
 @app.get("/test-db")
 def test_db():
