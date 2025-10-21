@@ -1,0 +1,38 @@
+name: CD - Deploy Frontend (Angular)
+
+on:
+  workflow_run:
+    workflows: ["CI - Build and Test"]
+    types: [completed]
+
+jobs:
+  deploy:
+    name: 🚀 Deploy Angular Frontend
+    if: github.ref == 'refs/heads/main' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🧪 Check Render Secret
+        run: |
+          if [ -z "${{ secrets.RENDER_FRONTEND_HOOK }}" ]; then
+            echo "❌ Secret RENDER_FRONTEND_HOOK is missing!"
+            exit 1
+          else
+            echo "✅ Secret found. Proceeding with deployment..."
+          fi
+
+      - name: 🚀 Trigger Render Deploy (Frontend)
+        env:
+          RENDER_FRONTEND_HOOK_URL: ${{ secrets.RENDER_FRONTEND_HOOK }}
+        run: |
+          echo "🚀 Deploying Angular frontend to Render..."
+          RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -X POST "$RENDER_FRONTEND_HOOK_URL")
+
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "❌ Deployment failed with status code $RESPONSE"
+            echo "Response:"
+            cat response.txt
+            exit 1
+          else
+            echo "✅ Render deployment triggered successfully!"
+          fi
