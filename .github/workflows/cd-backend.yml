@@ -8,9 +8,9 @@ on:
 jobs:
   deploy:
     name: 🚀 Deploy Spring Boot Backend
-    # ✅ Ne déploie que si build réussi ET sur la branche main
     if: github.ref == 'refs/heads/main' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: 🧪 Check Render Secret

@@ -8,9 +8,9 @@ on:
 jobs:
   deploy:
     name: 🚀 Deploy FastAPI ETL
-    # ✅ Même logique ici
     if: github.ref == 'refs/heads/main' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: 🧪 Check Render Secret

@@ -23,7 +23,7 @@ jobs:
           java-version: '21'
 
       - name: Build Spring Boot
-        run: mvn clean package -DskipTests   # ✅ remplacé ./mvnw par mvn
+        run: mvn clean package -DskipTests
 
       - name: Run tests
         run: mvn test
@@ -47,3 +47,23 @@ jobs:
 
       - name: Run syntax check
         run: python -m py_compile app/main.py
+
+  frontend-build:
+    name: 💻 Build Frontend (Angular)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Angular project
+        run: npm run build --if-present
